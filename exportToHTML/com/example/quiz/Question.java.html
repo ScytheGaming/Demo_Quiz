@@ -1,0 +1,74 @@
+<html>
+<head>
+<title>Question.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cc7832;}
+.s1 { color: #a9b7c6;}
+.s2 { color: #808080;}
+</style>
+</head>
+<body bgcolor="#2b2b2b">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+Question.java</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">com.example.quiz</span><span class="s0">;</span>
+
+<span class="s2">// Question.java</span>
+<span class="s0">public class </span><span class="s1">Question {</span>
+    <span class="s0">private </span><span class="s1">String questionText</span><span class="s0">;</span>
+    <span class="s0">private </span><span class="s1">String[] answers</span><span class="s0">;</span>
+    <span class="s0">private int</span><span class="s1">[] scores</span><span class="s0">;</span>
+    <span class="s0">private boolean </span><span class="s1">isSliderQuestion</span><span class="s0">; </span><span class="s2">// Indicates if the question is a slider question</span>
+    <span class="s0">private int </span><span class="s1">sliderMinValue</span><span class="s0">; </span><span class="s2">// The minimum value of the slider scale</span>
+    <span class="s0">private int </span><span class="s1">sliderMaxValue</span><span class="s0">; </span><span class="s2">// The maximum value of the slider scale</span>
+
+    <span class="s2">// Constructor for multiple-choice questions</span>
+    <span class="s0">public </span><span class="s1">Question(String questionText</span><span class="s0">, </span><span class="s1">String[] answers</span><span class="s0">, int</span><span class="s1">[] scores) {</span>
+        <span class="s0">this</span><span class="s1">.questionText = questionText</span><span class="s0">;</span>
+        <span class="s0">this</span><span class="s1">.answers = answers</span><span class="s0">;</span>
+        <span class="s0">this</span><span class="s1">.scores = scores</span><span class="s0">;</span>
+        <span class="s0">this</span><span class="s1">.isSliderQuestion = </span><span class="s0">false;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">// Constructor for slider questions</span>
+    <span class="s0">public </span><span class="s1">Question(String questionText</span><span class="s0">, int </span><span class="s1">sliderMinValue</span><span class="s0">, int </span><span class="s1">sliderMaxValue) {</span>
+        <span class="s0">this</span><span class="s1">.questionText = questionText</span><span class="s0">;</span>
+        <span class="s0">this</span><span class="s1">.sliderMinValue = sliderMinValue</span><span class="s0">;</span>
+        <span class="s0">this</span><span class="s1">.sliderMaxValue = sliderMaxValue</span><span class="s0">;</span>
+        <span class="s0">this</span><span class="s1">.isSliderQuestion = </span><span class="s0">true;</span>
+    <span class="s1">}</span>
+
+    <span class="s0">public </span><span class="s1">String getQuestionText() {</span>
+        <span class="s0">return </span><span class="s1">questionText</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s0">public </span><span class="s1">String[] getAnswers() {</span>
+        <span class="s0">return </span><span class="s1">answers</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s0">public int</span><span class="s1">[] getScores() {</span>
+        <span class="s0">return </span><span class="s1">scores</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s0">public boolean </span><span class="s1">isSliderQuestion() {</span>
+        <span class="s0">return </span><span class="s1">isSliderQuestion</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s0">public int </span><span class="s1">getSliderMinValue() {</span>
+        <span class="s0">return </span><span class="s1">sliderMinValue</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s0">public int </span><span class="s1">getSliderMaxValue() {</span>
+        <span class="s0">return </span><span class="s1">sliderMaxValue</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s0">public boolean </span><span class="s1">isTrueFalseQuestion() {</span>
+        <span class="s0">return false;</span>
+    <span class="s1">}</span>
+<span class="s1">}</span>
+</pre>
+</body>
+</html>

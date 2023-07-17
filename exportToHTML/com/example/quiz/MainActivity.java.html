@@ -1,0 +1,215 @@
+<html>
+<head>
+<title>MainActivity.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cc7832;}
+.s1 { color: #a9b7c6;}
+.s2 { color: #6897bb;}
+.s3 { color: #808080;}
+.s4 { color: #6a8759;}
+</style>
+</head>
+<body bgcolor="#2b2b2b">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+MainActivity.java</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">com.example.quiz</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">androidx.appcompat.app.AppCompatActivity</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.os.Bundle</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.view.View</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.widget.Button</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.widget.RadioButton</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.widget.RadioGroup</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.widget.SeekBar</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.widget.TextView</span><span class="s0">;</span>
+
+<span class="s0">public class </span><span class="s1">MainActivity </span><span class="s0">extends </span><span class="s1">AppCompatActivity {</span>
+
+    <span class="s0">private </span><span class="s1">TextView questionTextView</span><span class="s0">;</span>
+    <span class="s0">private </span><span class="s1">RadioGroup answersRadioGroup</span><span class="s0">;</span>
+    <span class="s0">private </span><span class="s1">SeekBar sliderSeekBar</span><span class="s0">;</span>
+    <span class="s0">private </span><span class="s1">TextView sliderValueTextView</span><span class="s0">;</span>
+    <span class="s0">private </span><span class="s1">Button submitButton</span><span class="s0">;</span>
+
+    <span class="s0">private </span><span class="s1">Question[] quizQuestions</span><span class="s0">;</span>
+    <span class="s0">private int </span><span class="s1">currentQuestionIndex = </span><span class="s2">0</span><span class="s0">;</span>
+    <span class="s0">private int </span><span class="s1">totalScore = </span><span class="s2">0</span><span class="s0">;</span>
+    <span class="s0">private int </span><span class="s1">currentSliderValue = </span><span class="s2">50</span><span class="s0">; </span><span class="s3">// Set an initial value for the slider</span>
+    <span class="s0">private int </span><span class="s1">previousAnswerScore = </span><span class="s2">0</span><span class="s0">; </span><span class="s3">// Variable to store the score of the previous answer</span>
+
+    <span class="s1">@Override</span>
+    <span class="s0">protected void </span><span class="s1">onCreate(Bundle savedInstanceState) {</span>
+        <span class="s0">super</span><span class="s1">.onCreate(savedInstanceState)</span><span class="s0">;</span>
+        <span class="s1">setContentView(R.layout.activity_main)</span><span class="s0">;</span>
+
+        <span class="s1">questionTextView = findViewById(R.id.questionTextView)</span><span class="s0">;</span>
+        <span class="s1">answersRadioGroup = findViewById(R.id.answersRadioGroup)</span><span class="s0">;</span>
+        <span class="s1">sliderSeekBar = findViewById(R.id.sliderSeekBar)</span><span class="s0">;</span>
+        <span class="s1">sliderValueTextView = findViewById(R.id.sliderValueTextView)</span><span class="s0">;</span>
+        <span class="s1">submitButton = findViewById(R.id.submitButton)</span><span class="s0">;</span>
+
+        <span class="s3">// Create quiz questions here, e.g.:</span>
+        <span class="s1">quizQuestions = </span><span class="s0">new </span><span class="s1">Question[]{</span>
+                <span class="s0">new </span><span class="s1">Question(</span><span class="s4">&quot;What is the capital of France?&quot;</span><span class="s0">,</span>
+                        <span class="s0">new </span><span class="s1">String[]{</span><span class="s4">&quot;London&quot;</span><span class="s0">, </span><span class="s4">&quot;Paris&quot;</span><span class="s0">, </span><span class="s4">&quot;Berlin&quot;</span><span class="s0">, </span><span class="s4">&quot;Madrid&quot;</span><span class="s1">}</span><span class="s0">,</span>
+                        <span class="s0">new int</span><span class="s1">[]{</span><span class="s2">0</span><span class="s0">, </span><span class="s2">10</span><span class="s0">, </span><span class="s2">0</span><span class="s0">, </span><span class="s2">0</span><span class="s1">})</span><span class="s0">,</span>
+                <span class="s0">new </span><span class="s1">Question(</span><span class="s4">&quot;On a scale of 1 to 10, how much do you like pizza?&quot;</span><span class="s0">, </span><span class="s2">1</span><span class="s0">, </span><span class="s2">10</span><span class="s1">)</span><span class="s0">,</span>
+
+                <span class="s0">new </span><span class="s1">TrueFalseQuestion(</span><span class="s4">&quot;Is the sky blue?&quot;</span><span class="s0">, true</span><span class="s1">)</span><span class="s0">, </span><span class="s3">// Diverging path for True</span>
+                <span class="s0">new </span><span class="s1">TrueFalseQuestion(</span><span class="s4">&quot;Is water wet?&quot;</span><span class="s0">, false</span><span class="s1">)</span><span class="s0">,   </span><span class="s3">// Diverging path for False</span>
+
+                <span class="s3">// Add more questions here</span>
+        <span class="s1">}</span><span class="s0">;</span>
+
+        <span class="s3">// Restore the slider value and previous answer score if they exist</span>
+        <span class="s0">if </span><span class="s1">(savedInstanceState != </span><span class="s0">null</span><span class="s1">) {</span>
+            <span class="s1">currentSliderValue = savedInstanceState.getInt(</span><span class="s4">&quot;currentSliderValue&quot;</span><span class="s0">, </span><span class="s2">50</span><span class="s1">)</span><span class="s0">; </span><span class="s3">// Use the initial value if not saved</span>
+            <span class="s1">previousAnswerScore = savedInstanceState.getInt(</span><span class="s4">&quot;previousAnswerScore&quot;</span><span class="s0">, </span><span class="s2">0</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">}</span>
+
+        <span class="s1">showQuestion(currentQuestionIndex)</span><span class="s0">;</span>
+
+        <span class="s1">submitButton.setOnClickListener(</span><span class="s0">new </span><span class="s1">View.OnClickListener() {</span>
+            <span class="s1">@Override</span>
+            <span class="s0">public void </span><span class="s1">onClick(View v) {</span>
+                <span class="s1">Question currentQuestion = quizQuestions[currentQuestionIndex]</span><span class="s0">;</span>
+
+                <span class="s0">if </span><span class="s1">(currentQuestion.isTrueFalseQuestion()) {</span>
+                    <span class="s0">int </span><span class="s1">selectedAnswerIndex = answersRadioGroup.getCheckedRadioButtonId()</span><span class="s0">;</span>
+                    <span class="s0">if </span><span class="s1">(selectedAnswerIndex != -</span><span class="s2">1</span><span class="s1">) {</span>
+                        <span class="s0">boolean </span><span class="s1">userAnswer = selectedAnswerIndex == </span><span class="s2">0</span><span class="s0">; </span><span class="s3">// 0 for True, 1 for False</span>
+                        <span class="s1">TrueFalseQuestion trueFalseQuestion = (TrueFalseQuestion) currentQuestion</span><span class="s0">;</span>
+                        <span class="s0">if </span><span class="s1">(trueFalseQuestion.isCorrectAnswer(userAnswer)) {</span>
+                            <span class="s1">previousAnswerScore = trueFalseQuestion.getScores()[selectedAnswerIndex]</span><span class="s0">;</span>
+                        <span class="s1">} </span><span class="s0">else </span><span class="s1">{</span>
+                            <span class="s1">previousAnswerScore = </span><span class="s2">0</span><span class="s0">; </span><span class="s3">// If the true/false answer is incorrect, set the previous score to 0</span>
+                        <span class="s1">}</span>
+                        <span class="s1">currentQuestionIndex++</span><span class="s0">;</span>
+                        <span class="s0">if </span><span class="s1">(currentQuestionIndex &lt; quizQuestions.length) {</span>
+                            <span class="s1">showQuestion(currentQuestionIndex)</span><span class="s0">;</span>
+                        <span class="s1">} </span><span class="s0">else </span><span class="s1">{</span>
+                            <span class="s1">finishQuiz()</span><span class="s0">;</span>
+                        <span class="s1">}</span>
+                    <span class="s1">}</span>
+                <span class="s1">} </span><span class="s0">else if </span><span class="s1">(currentQuestion.getAnswers().length &gt; </span><span class="s2">1</span><span class="s1">) {</span>
+                    <span class="s0">int </span><span class="s1">selectedAnswerIndex = answersRadioGroup.getCheckedRadioButtonId()</span><span class="s0">;</span>
+                    <span class="s0">if </span><span class="s1">(selectedAnswerIndex != -</span><span class="s2">1</span><span class="s1">) {</span>
+                        <span class="s0">int </span><span class="s1">score = currentQuestion.getScores()[selectedAnswerIndex]</span><span class="s0">;</span>
+                        <span class="s1">totalScore += score * previousAnswerScore</span><span class="s0">;</span>
+                    <span class="s1">}</span>
+                    <span class="s1">currentQuestionIndex++</span><span class="s0">;</span>
+                    <span class="s0">if </span><span class="s1">(currentQuestionIndex &lt; quizQuestions.length) {</span>
+                        <span class="s1">showQuestion(currentQuestionIndex)</span><span class="s0">;</span>
+                    <span class="s1">} </span><span class="s0">else </span><span class="s1">{</span>
+                        <span class="s1">finishQuiz()</span><span class="s0">;</span>
+                    <span class="s1">}</span>
+                <span class="s1">} </span><span class="s0">else </span><span class="s1">{</span>
+                    <span class="s0">int </span><span class="s1">sliderValue = sliderSeekBar.getProgress()</span><span class="s0">;</span>
+                    <span class="s0">int </span><span class="s1">sliderMinValue = currentQuestion.getSliderMinValue()</span><span class="s0">;</span>
+                    <span class="s0">int </span><span class="s1">sliderMaxValue = currentQuestion.getSliderMaxValue()</span><span class="s0">;</span>
+                    <span class="s0">int </span><span class="s1">score = calculateSliderScore(sliderValue</span><span class="s0">, </span><span class="s1">sliderMinValue</span><span class="s0">, </span><span class="s1">sliderMaxValue)</span><span class="s0">;</span>
+                    <span class="s1">totalScore += score * previousAnswerScore</span><span class="s0">;</span>
+
+                    <span class="s1">currentQuestionIndex++</span><span class="s0">;</span>
+                    <span class="s0">if </span><span class="s1">(currentQuestionIndex &lt; quizQuestions.length) {</span>
+                        <span class="s1">showQuestion(currentQuestionIndex)</span><span class="s0">;</span>
+                    <span class="s1">} </span><span class="s0">else </span><span class="s1">{</span>
+                        <span class="s1">finishQuiz()</span><span class="s0">;</span>
+                    <span class="s1">}</span>
+                <span class="s1">}</span>
+            <span class="s1">}</span>
+        <span class="s1">})</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s0">private int </span><span class="s1">calculateSliderScore(</span><span class="s0">int </span><span class="s1">sliderValue</span><span class="s0">, int </span><span class="s1">sliderMinValue</span><span class="s0">, int </span><span class="s1">sliderMaxValue) {</span>
+        <span class="s3">// You can implement your custom logic here to calculate the score based on the slider value</span>
+        <span class="s3">// For example, you can convert the slider value to a score based on some range</span>
+        <span class="s3">// For simplicity, we will use a linear scaling formula here</span>
+        <span class="s0">float </span><span class="s1">range = sliderMaxValue - sliderMinValue</span><span class="s0">;</span>
+        <span class="s0">float </span><span class="s1">normalizedSliderValue = (</span><span class="s0">float</span><span class="s1">) (sliderValue - sliderMinValue) / range</span><span class="s0">;</span>
+        <span class="s0">int </span><span class="s1">maxScore = </span><span class="s2">10</span><span class="s0">; </span><span class="s3">// You can adjust this based on your desired maximum score</span>
+        <span class="s0">int </span><span class="s1">score = Math.round(normalizedSliderValue * maxScore)</span><span class="s0">;</span>
+
+        <span class="s0">return </span><span class="s1">score</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+
+    <span class="s0">private void </span><span class="s1">showQuestion(</span><span class="s0">int </span><span class="s1">questionIndex) {</span>
+        <span class="s1">Question currentQuestion = quizQuestions[questionIndex]</span><span class="s0">;</span>
+        <span class="s1">questionTextView.setText(currentQuestion.getQuestionText())</span><span class="s0">;</span>
+
+        <span class="s0">if </span><span class="s1">(currentQuestion.isTrueFalseQuestion()) {</span>
+            <span class="s1">answersRadioGroup.setVisibility(View.VISIBLE)</span><span class="s0">;</span>
+            <span class="s1">sliderSeekBar.setVisibility(View.GONE)</span><span class="s0">;</span>
+            <span class="s1">sliderValueTextView.setVisibility(View.GONE)</span><span class="s0">;</span>
+
+            <span class="s1">answersRadioGroup.removeAllViews()</span><span class="s0">;</span>
+            <span class="s0">for </span><span class="s1">(</span><span class="s0">int </span><span class="s1">i = </span><span class="s2">0</span><span class="s0">; </span><span class="s1">i &lt; currentQuestion.getAnswers().length</span><span class="s0">; </span><span class="s1">i++) {</span>
+                <span class="s1">RadioButton radioButton = </span><span class="s0">new </span><span class="s1">RadioButton(</span><span class="s0">this</span><span class="s1">)</span><span class="s0">;</span>
+                <span class="s1">radioButton.setText(currentQuestion.getAnswers()[i])</span><span class="s0">;</span>
+                <span class="s1">radioButton.setId(i)</span><span class="s0">;</span>
+                <span class="s1">answersRadioGroup.addView(radioButton)</span><span class="s0">;</span>
+            <span class="s1">}</span>
+        <span class="s1">} </span><span class="s0">else if </span><span class="s1">(currentQuestion.getAnswers().length &gt; </span><span class="s2">1</span><span class="s1">) {</span>
+            <span class="s1">answersRadioGroup.setVisibility(View.VISIBLE)</span><span class="s0">;</span>
+            <span class="s1">sliderSeekBar.setVisibility(View.GONE)</span><span class="s0">;</span>
+            <span class="s1">sliderValueTextView.setVisibility(View.GONE)</span><span class="s0">;</span>
+
+            <span class="s1">answersRadioGroup.removeAllViews()</span><span class="s0">;</span>
+            <span class="s0">for </span><span class="s1">(</span><span class="s0">int </span><span class="s1">i = </span><span class="s2">0</span><span class="s0">; </span><span class="s1">i &lt; currentQuestion.getAnswers().length</span><span class="s0">; </span><span class="s1">i++) {</span>
+                <span class="s1">RadioButton radioButton = </span><span class="s0">new </span><span class="s1">RadioButton(</span><span class="s0">this</span><span class="s1">)</span><span class="s0">;</span>
+                <span class="s1">radioButton.setText(currentQuestion.getAnswers()[i])</span><span class="s0">;</span>
+                <span class="s1">radioButton.setId(i)</span><span class="s0">;</span>
+                <span class="s1">answersRadioGroup.addView(radioButton)</span><span class="s0">;</span>
+            <span class="s1">}</span>
+        <span class="s1">} </span><span class="s0">else </span><span class="s1">{</span>
+            <span class="s1">answersRadioGroup.setVisibility(View.GONE)</span><span class="s0">;</span>
+            <span class="s1">sliderSeekBar.setVisibility(View.VISIBLE)</span><span class="s0">;</span>
+            <span class="s1">sliderValueTextView.setVisibility(View.VISIBLE)</span><span class="s0">;</span>
+
+            <span class="s0">int </span><span class="s1">sliderMinValue = currentQuestion.getSliderMinValue()</span><span class="s0">;</span>
+            <span class="s0">int </span><span class="s1">sliderMaxValue = currentQuestion.getSliderMaxValue()</span><span class="s0">;</span>
+            <span class="s1">sliderSeekBar.setMax(sliderMaxValue - sliderMinValue)</span><span class="s0">;</span>
+            <span class="s1">sliderSeekBar.setProgress(currentSliderValue - sliderMinValue)</span><span class="s0">;</span>
+            <span class="s1">sliderValueTextView.setText(String.valueOf(currentSliderValue))</span><span class="s0">;</span>
+
+            <span class="s1">sliderSeekBar.setOnSeekBarChangeListener(</span><span class="s0">new </span><span class="s1">SeekBar.OnSeekBarChangeListener() {</span>
+                <span class="s1">@Override</span>
+                <span class="s0">public void </span><span class="s1">onProgressChanged(SeekBar seekBar</span><span class="s0">, int </span><span class="s1">progress</span><span class="s0">, boolean </span><span class="s1">fromUser) {</span>
+                    <span class="s1">currentSliderValue = progress + currentQuestion.getSliderMinValue()</span><span class="s0">;</span>
+                    <span class="s1">sliderValueTextView.setText(String.valueOf(currentSliderValue))</span><span class="s0">;</span>
+                <span class="s1">}</span>
+
+                <span class="s1">@Override</span>
+                <span class="s0">public void </span><span class="s1">onStartTrackingTouch(SeekBar seekBar) {</span>
+                <span class="s1">}</span>
+
+                <span class="s1">@Override</span>
+                <span class="s0">public void </span><span class="s1">onStopTrackingTouch(SeekBar seekBar) {</span>
+                <span class="s1">}</span>
+            <span class="s1">})</span><span class="s0">;</span>
+        <span class="s1">}</span>
+    <span class="s1">}</span>
+
+    <span class="s0">private void </span><span class="s1">finishQuiz() {</span>
+        <span class="s1">questionTextView.setText(</span><span class="s4">&quot;Quiz Completed! Your Total Score: &quot; </span><span class="s1">+ totalScore)</span><span class="s0">;</span>
+        <span class="s1">answersRadioGroup.setVisibility(View.GONE)</span><span class="s0">;</span>
+        <span class="s1">sliderSeekBar.setVisibility(View.GONE)</span><span class="s0">;</span>
+        <span class="s1">sliderValueTextView.setVisibility(View.GONE)</span><span class="s0">;</span>
+        <span class="s1">submitButton.setVisibility(View.GONE)</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s1">@Override</span>
+    <span class="s0">protected void </span><span class="s1">onSaveInstanceState(Bundle outState) {</span>
+        <span class="s0">super</span><span class="s1">.onSaveInstanceState(outState)</span><span class="s0">;</span>
+        <span class="s1">outState.putInt(</span><span class="s4">&quot;currentSliderValue&quot;</span><span class="s0">, </span><span class="s1">currentSliderValue)</span><span class="s0">;</span>
+        <span class="s1">outState.putInt(</span><span class="s4">&quot;previousAnswerScore&quot;</span><span class="s0">, </span><span class="s1">previousAnswerScore)</span><span class="s0">;</span>
+    <span class="s1">}</span>
+<span class="s1">}</span>
+</pre>
+</body>
+</html>
